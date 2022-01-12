@@ -4,6 +4,7 @@ import cors from 'cors';
 import * as admin from 'firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
 const serviceAccount = require('./butil-ordering-firebase-adminsdk-7rioz-4a70bff51b.json');
@@ -20,6 +21,11 @@ const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({  extended: true }));
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+app.get(['/', '/login', '/404', '/dashboards/*'], (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
 
 app.get('/api/:token/user/:uid', (req, res) => {
     const token = req.params.token;

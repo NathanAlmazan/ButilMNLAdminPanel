@@ -28,6 +28,7 @@ const cors_1 = __importDefault(require("cors"));
 const admin = __importStar(require("firebase-admin"));
 const auth_1 = require("firebase-admin/auth");
 const dotenv_1 = __importDefault(require("dotenv"));
+const path_1 = __importDefault(require("path"));
 dotenv_1.default.config();
 const serviceAccount = require('./butil-ordering-firebase-adminsdk-7rioz-4a70bff51b.json');
 const firebaseAdmin = admin.initializeApp({
@@ -39,6 +40,10 @@ const port = process.env.PORT || 4000;
 app.use((0, cors_1.default)());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
+app.use(express_1.default.static(path_1.default.join(__dirname, '..', 'public')));
+app.get(['/', '/login', '/404', '/dashboards/*'], (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, '..', 'public', 'index.html'));
+});
 app.get('/api/:token/user/:uid', (req, res) => {
     const token = req.params.token;
     const uid = req.params.uid;
